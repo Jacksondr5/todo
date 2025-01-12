@@ -9,7 +9,7 @@ jobs:
   deploy:
     name: Deploy Database
     env:
-      DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+      POSTGRES_URL: ${{ secrets.PROD_POSTGRES_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
