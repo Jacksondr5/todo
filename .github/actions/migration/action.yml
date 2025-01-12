@@ -10,6 +10,4 @@ runs:
 
     - name: Check that all migrations were committed
       shell: bash
-      run: |
-        git status --porcelain
-        git status --porcelain | grep -E 'drizzle/' && (echo "Migrations not committed" && exit 1) || echo "Migrations committed"
+      run: ./scripts/checkMigrations.sh
