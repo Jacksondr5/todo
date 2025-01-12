@@ -1,0 +1,13 @@
+name: "Check that migrations were committed"
+description: "Checks that migrations were committed"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate DB migrations
+      shell: bash
+      run: pnpm db:generate
+
+    - name: Check that all migrations were committed
+      shell: bash
+      run: ./scripts/checkMigrations.sh

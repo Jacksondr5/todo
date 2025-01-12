@@ -1,12 +1,16 @@
 import { type Config } from "drizzle-kit";
 
-import { env } from "~/env";
+const databaseUrl = process.env.DATABASE_DIRECT_URL;
+if (!databaseUrl) {
+  throw new Error("DATABASE_DIRECT_URL is not set");
+}
 
 export default {
-  schema: "./src/server/db/schema.ts",
+  schema: "./src/server/db/schema",
   dialect: "postgresql",
   dbCredentials: {
-    url: env.DATABASE_URL,
+    url: databaseUrl,
+    ssl: "require",
   },
-  tablesFilter: ["todo_*"],
+  tablesFilter: [`todo*`],
 } satisfies Config;

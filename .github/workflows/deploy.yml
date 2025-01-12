@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Database
+    env:
+      DATABASE_DIRECT_URL: ${{ secrets.PROD_DATABASE_DIRECT_URL }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/pnpm
+
+      - name: Check that migrations were committed
+        uses: ./.github/actions/migration
+
+      - name: Migrate Production DB
+        run: pnpm db:migrate
