@@ -5,9 +5,11 @@ runs:
   using: "composite"
   steps:
     - name: Generate DB migrations
+      shell: bash
       run: pnpm db:generate:all
 
     - name: Check that all migrations were committed
+      shell: bash
       run: |
         git status --porcelain
         git status --porcelain | grep -E 'drizzle/' && echo ("Migrations not committed" && exit 1)
