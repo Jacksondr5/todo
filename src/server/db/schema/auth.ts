@@ -7,7 +7,7 @@ import {
   index,
   text,
 } from "drizzle-orm/pg-core";
-import { AdapterAccount } from "next-auth/adapters";
+import { type AdapterAccount } from "next-auth/adapters";
 import { createTable } from "../utils";
 
 export const users = createTable("user", {

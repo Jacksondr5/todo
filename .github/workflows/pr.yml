@@ -9,8 +9,7 @@ jobs:
     name: Validate PR
     runs-on: ubuntu-latest
     env:
-      AUTH_SECRET: TBD
-      DATABASE_URL: mysql://user:password@localhost:3306/todo
+      DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
