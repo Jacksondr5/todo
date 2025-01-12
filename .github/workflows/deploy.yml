@@ -20,4 +20,6 @@ jobs:
         uses: ./.github/actions/migration
 
       - name: Migrate Production DB
-        run: pnpm db:migrate:prod
+        env:
+          DATABASE_DIRECT_URL: ${{ secrets.PROD_DATABASE_DIRECT_URL }}
+        run: pnpm db:migrate

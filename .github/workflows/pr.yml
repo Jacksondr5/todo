@@ -36,6 +36,3 @@ jobs:
 
       - name: Check that migrations were committed
         uses: ./.github/actions/migration
-
-      - name: Migrate Test DB
-        run: pnpm db:migrate:test
