@@ -9,6 +9,9 @@ jobs:
     name: Validate PR
     runs-on: ubuntu-latest
     env:
+      AUTH_GITHUB_ID: TBD
+      AUTH_GITHUB_SECRET: TBD
+      DATABASE_URL: postgresql://postgres:password@localhost:6543/postgres
       DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
     steps:
       - name: Checkout code
