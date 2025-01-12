@@ -41,21 +41,21 @@ const play = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
   }
 };
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Active: Story = {
-  args: { title: "Active" },
+  // Force the args to TaskProps because we set the title in TaskSet
+  args: {} as TaskProps,
   render: (args) => <TaskSet {...args} />,
   play,
 };
 
 export const Blocked: Story = {
-  args: { title: "Blocked", isBlocked: true },
+  args: { isBlocked: true } as TaskProps,
   render: (args) => <TaskSet {...args} />,
   play,
 };
 
 export const Done: Story = {
-  args: { title: "Done", isDone: true },
+  args: { isDone: true } as TaskProps,
   render: (args) => <TaskSet {...args} />,
   play,
 };
