@@ -6,7 +6,7 @@ runs:
   steps:
     - name: Generate DB migrations
       shell: bash
-      run: pnpm db:generate:all
+      run: pnpm db:generate
 
     - name: Check that all migrations were committed
       shell: bash
