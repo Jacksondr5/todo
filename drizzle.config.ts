@@ -1,8 +1,8 @@
 import { type Config } from "drizzle-kit";
 
-const databaseUrl = process.env.DATABASE_DIRECT_URL;
+const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
-  throw new Error("DATABASE_DIRECT_URL is not set");
+  throw new Error("DATABASE_URL is not set");
 }
 
 export default {

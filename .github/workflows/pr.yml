@@ -11,8 +11,7 @@ jobs:
       AUTH_SECRET: TBD
       AUTH_GITHUB_ID: TBD
       AUTH_GITHUB_SECRET: TBD
-      DATABASE_URL: postgresql://postgres:password@localhost:6543/postgres
-      DATABASE_DIRECT_URL: ${{ secrets.DEV_DATABASE_DIRECT_URL }}
+      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
