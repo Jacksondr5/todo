@@ -11,7 +11,7 @@ jobs:
       AUTH_SECRET: TBD
       AUTH_GITHUB_ID: TBD
       AUTH_GITHUB_SECRET: TBD
-      DATABASE_URL: ${{ secrets.DEV_DATABASE_URL }}
+      POSTGRES_URL: ${{ secrets.DEV_POSTGRES_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
