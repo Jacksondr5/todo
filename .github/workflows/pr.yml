@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AUTH_SECRET: TBD
-      DATABASE_URL: TBD
+      DATABASE_URL: mysql://user:password@localhost:3306/todo
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
