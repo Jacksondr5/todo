@@ -37,7 +37,9 @@ jobs:
         run: pnpm db:generate:all
 
       - name: Check that all migrations were committed
-        run: git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
+        run: |
+          git status --porcelain
+          git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
 
       - name: Migrate Test DB
         run: pnpm db:migrate:test
