@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, within } from "@storybook/test";
+import { userEvent, within } from "@storybook/test";
 
-import { Task, TaskProps } from "./Task";
+import { Task, type TaskProps } from "./Task";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
@@ -43,18 +43,19 @@ const play = async ({ canvasElement }: { canvasElement: HTMLElement }) => {
 
 // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
 export const Active: Story = {
+  args: { title: "Active" },
   render: (args) => <TaskSet {...args} />,
   play,
 };
 
 export const Blocked: Story = {
-  args: { isBlocked: true },
+  args: { title: "Blocked", isBlocked: true },
   render: (args) => <TaskSet {...args} />,
   play,
 };
 
 export const Done: Story = {
-  args: { isDone: true },
+  args: { title: "Done", isDone: true },
   render: (args) => <TaskSet {...args} />,
   play,
 };
