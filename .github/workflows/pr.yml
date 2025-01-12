@@ -9,6 +9,7 @@ jobs:
     name: Validate PR
     runs-on: ubuntu-latest
     env:
+      AUTH_SECRET: TBD
       AUTH_GITHUB_ID: TBD
       AUTH_GITHUB_SECRET: TBD
       DATABASE_URL: postgresql://postgres:password@localhost:6543/postgres
@@ -33,13 +34,8 @@ jobs:
       # - name: Build
       #   run: pnpm build
 
-      - name: Generate DB migrations
-        run: pnpm db:generate:all
-
-      - name: Check that all migrations were committed
-        run: |
-          git status --porcelain
-          git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
+      - name: Check that migrations were committed
+        uses: ./.github/actions/migration
 
       - name: Migrate Test DB
         run: pnpm db:migrate:test

@@ -1,0 +1,13 @@
+name: "Check that migrations were committed"
+description: "Checks that migrations were committed"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Generate DB migrations
+      run: pnpm db:generate:all
+
+    - name: Check that all migrations were committed
+      run: |
+        git status --porcelain
+        git status --porcelain | grep -E 'drizzle/' && echo ("Migrations not committed" && exit 1)

@@ -16,11 +16,8 @@ jobs:
       - name: Setup Node.js and dependencies
         uses: ./.github/actions/pnpm
 
-      - name: Generate DB migrations
-        run: pnpm db:generate:all
-
-      - name: Check that all migrations were committed
-        run: git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
+      - name: Check that migrations were committed
+        uses: ./.github/actions/migration
 
       - name: Migrate Production DB
         run: pnpm db:migrate:prod
