@@ -8,8 +8,8 @@ import { cn } from "~/lib/utils";
 
 export type TaskProps = {
   description?: string;
-  isBlocked?: boolean;
-  isDone?: boolean;
+  isBlocked: boolean;
+  isDone: boolean;
   isImportant?: boolean;
   isUrgent?: boolean;
   title: string;

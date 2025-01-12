@@ -18,17 +18,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const defaultProps: Pick<TaskProps, "isBlocked" | "isDone"> = {
+  isBlocked: false,
+  isDone: false,
+};
+
 const TaskSet = (props: Partial<TaskProps>) => {
   return (
     <div className="flex flex-col gap-4">
-      <Task title="Normal" {...props} />
-      <Task title="Urgent" isUrgent {...props} />
-      <Task title="Not Urgent" isUrgent={false} {...props} />
-      <Task title="Important" isImportant {...props} />
-      <Task title="Not Important" isImportant={false} {...props} />
-      <Task title="Both" isUrgent isImportant {...props} />
-      <Task title="Both Not" isUrgent={false} isImportant={false} {...props} />
-      <Task title="Focused" {...props} />
+      <Task title="Normal" {...defaultProps} {...props} />
+      <Task title="Urgent" isUrgent {...defaultProps} {...props} />
+      <Task title="Not Urgent" isUrgent={false} {...defaultProps} {...props} />
+      <Task title="Important" isImportant {...defaultProps} {...props} />
+      <Task
+        title="Not Important"
+        isImportant={false}
+        {...defaultProps}
+        {...props}
+      />
+      <Task title="Both" isUrgent isImportant {...defaultProps} {...props} />
+      <Task
+        title="Both Not"
+        isUrgent={false}
+        isImportant={false}
+        {...defaultProps}
+        {...props}
+      />
+      <Task title="Focused" {...defaultProps} {...props} />
     </div>
   );
 };

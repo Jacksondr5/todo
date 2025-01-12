@@ -6,6 +6,7 @@ on:
 
 jobs:
   validate:
+    name: Validate PR
     runs-on: ubuntu-latest
     env:
       AUTH_SECRET: TBD
@@ -23,8 +24,18 @@ jobs:
       - name: Format check
         run: pnpm format:check
 
-      - name: Lint
-        run: pnpm lint
+      # Disabling this for a bit, since Vercel should be doing this
+      # - name: Lint
+      #   run: pnpm lint
 
-      - name: Build
-        run: pnpm build
+      # - name: Build
+      #   run: pnpm build
+
+      - name: Generate DB migrations
+        run: pnpm db:generate:all
+
+      - name: Check that all migrations were committed
+        run: git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
+
+      - name: Migrate Test DB
+        run: pnpm db:migrate:test

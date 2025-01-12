@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Database
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/pnpm
+
+      - name: Generate DB migrations
+        run: pnpm db:generate:all
+
+      - name: Check that all migrations were committed
+        run: git status --porcelain | grep -E 'drizzle/' || (echo "Migrations not committed" && exit 1)
+
+      - name: Migrate Production DB
+        run: pnpm db:migrate:prod
