@@ -93,7 +93,7 @@ export const Task = ({
   return (
     <div
       className={cn(
-        "flex w-96 flex-col gap-2 rounded-md border p-2 focus:outline-2",
+        "flex w-96 flex-col gap-2 rounded-md border p-2 text-olive-12 focus:outline-2",
         "border-olive-6 bg-olive-2 focus:bg-olive-5 focus:outline-olive-7",
         isBlocked && "border-red-6 bg-red-2 focus:bg-red-5 focus:outline-red-7",
         isDone &&

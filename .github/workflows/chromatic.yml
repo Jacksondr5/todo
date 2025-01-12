@@ -1,0 +1,30 @@
+name: "Chromatic"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  chromatic:
+    name: Run Chromatic
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js and dependencies
+        uses: ./.github/actions/pnpm
+
+      - name: Run Chromatic
+        uses: chromaui/action@latest
+        env:
+          SKIP_ENV_VALIDATION: true
+        with:
+          buildScriptName: "storybook:build"
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
