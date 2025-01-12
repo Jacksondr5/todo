@@ -12,4 +12,4 @@ runs:
       shell: bash
       run: |
         git status --porcelain
-        git status --porcelain | grep -E 'drizzle/' && (echo "Migrations not committed" && exit 1)
+        git status --porcelain | grep -E 'drizzle/' && (echo "Migrations not committed" && exit 1) || echo "Migrations committed"
