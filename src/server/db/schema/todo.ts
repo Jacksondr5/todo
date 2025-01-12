@@ -26,5 +26,4 @@ export const tasks = createTable("task", {
   updatedAt: timestamp("updated_at", {
     withTimezone: true,
   }).$onUpdate(() => new Date()),
-  fake: integer("fake").default(0).notNull(),
 });
