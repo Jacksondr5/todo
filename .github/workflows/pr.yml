@@ -8,7 +8,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: mysql://user:password@localhost:3306/closet_book
+      AUTH_SECRET: TBD
+      DATABASE_URL: mysql://user:password@localhost:3306/todo
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
