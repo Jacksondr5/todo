@@ -27,6 +27,13 @@ A todo app that I actually use.
 - D to edit todo description
 - F to edit todo due date
 - T to edit todo tags
-- P to edit todo priority
-- M to edit todo matrix
+- I to edit todo importance
+- U to edit todo urgency
 - B to set todo as blocked
+
+## Ordering todos
+
+1. Important & Urgent
+2. Important & Not Urgent
+3. Not Important & Urgent
+4. Not Important & Not Urgent
