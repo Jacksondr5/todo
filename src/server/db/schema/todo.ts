@@ -11,9 +11,7 @@ import { sql } from "drizzle-orm";
 
 export const tasks = createTable("task", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
   createdById: varchar("created_by", { length: 255 })
     .notNull()
     .references(() => users.id),
@@ -25,5 +23,8 @@ export const tasks = createTable("task", {
   title: varchar("title", { length: 256 }).notNull(),
   updatedAt: timestamp("updated_at", {
     withTimezone: true,
-  }).$onUpdate(() => new Date()),
+  })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`)
+    .$onUpdate(() => new Date()),
 });

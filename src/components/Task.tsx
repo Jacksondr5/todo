@@ -1,99 +1,172 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Important } from "./svg/Important";
 import { Urgent } from "./svg/Urgent";
 import { TaskInput } from "./TaskInput";
 import { cn } from "~/lib/utils";
+import { EditingState, NEW_TASK_ID, useEditing } from "./EditingContext";
 
 export type TaskProps = {
+  createdAt: Date;
   description?: string;
+  id: number;
   isBlocked: boolean;
   isDone: boolean;
   isImportant?: boolean;
   isUrgent?: boolean;
   title: string;
-  // onChange: (title: string, description?: string) => void;
 };
 
 export const Task = ({
-  title: initialTitle,
-  description: initialDescription,
-  isBlocked: initialIsBlocked,
-  isDone: initialIsDone,
-  isImportant: initialIsImportant,
-  isUrgent: initialIsUrgent,
+  createdAt,
+  description,
+  id,
+  isBlocked,
+  isDone,
+  isImportant,
+  isUrgent,
+  title,
 }: TaskProps) => {
-  const [title, setTitle] = useState(initialTitle);
-  const [description, setDescription] = useState(initialDescription);
-  const [isBlocked, setIsBlocked] = useState(initialIsBlocked);
-  const [isImportant, setIsImportant] = useState(initialIsImportant);
-  const [isUrgent, setIsUrgent] = useState(initialIsUrgent);
-  const [isDone, setIsDone] = useState(initialIsDone);
-  const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const { dispatch, editingState, setEditingState, focusedTaskId } =
+    useEditing();
+
+  const taskRef = useRef<HTMLDivElement>(null);
   const titleEditRef = useRef<HTMLInputElement>(null);
   const descriptionEditRef = useRef<HTMLTextAreaElement>(null);
 
   const handleTitleChange = (value: string) => {
-    setTitle(value);
-    setIsEditingTitle(false);
-    ref.current?.focus();
+    if (id === NEW_TASK_ID) {
+      dispatch({ type: "create", value: { createdAt, title: value } });
+    } else {
+      dispatch({ type: "edit-title", taskId: id, value });
+    }
+    taskRef.current?.focus();
   };
 
   const handleDescriptionChange = (value: string) => {
-    setDescription(value);
-    setIsEditingDescription(false);
-    ref.current?.focus();
+    dispatch({ type: "edit-description", taskId: id, value });
+    taskRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (isEditingTitle || isEditingDescription) {
+    if (editingState) {
       return;
+    }
+
+    // Prevent default if we handle the key
+    if (/^[iedqbu]/.test(e.key)) {
+      e.preventDefault();
     }
 
     if (e.key === "i") {
       switch (isImportant) {
         case true:
-          setIsImportant(false);
+          dispatch({ type: "edit-important", taskId: id, value: false });
           break;
         case false:
-          setIsImportant(undefined);
+          dispatch({ type: "edit-important", taskId: id, value: undefined });
           break;
         case undefined:
-          setIsImportant(true);
+          dispatch({ type: "edit-important", taskId: id, value: true });
           break;
       }
     } else if (e.key === "u") {
       switch (isUrgent) {
         case true:
-          setIsUrgent(false);
+          dispatch({ type: "edit-urgent", taskId: id, value: false });
           break;
         case false:
-          setIsUrgent(undefined);
+          dispatch({ type: "edit-urgent", taskId: id, value: undefined });
           break;
         case undefined:
-          setIsUrgent(true);
+          dispatch({ type: "edit-urgent", taskId: id, value: true });
           break;
       }
     } else if (e.key === "b") {
-      setIsBlocked(!isBlocked);
+      dispatch({ type: "edit-blocked", taskId: id, value: !isBlocked });
     } else if (e.key === "e") {
-      setIsEditingTitle(true);
+      setEditingState({
+        target: "title",
+        taskCreatedAtTimestamp: createdAt.toISOString(),
+      });
       titleEditRef.current?.focus();
     } else if (e.key === "d") {
-      setIsEditingDescription(true);
+      setEditingState({
+        target: "description",
+        taskCreatedAtTimestamp: createdAt.toISOString(),
+      });
       descriptionEditRef.current?.focus();
     } else if (e.key === "q") {
-      setIsDone(!isDone);
+      dispatch({ type: "edit-done", taskId: id, value: !isDone });
+    } else if (e.key === "x") {
+      dispatch({ type: "delete-task", taskId: id });
     }
   };
 
+  useEffect(() => {
+    // When a new task is created, focus the title input
+    if (id === NEW_TASK_ID) {
+      setEditingState({
+        target: "title",
+        taskCreatedAtTimestamp: createdAt.toISOString(),
+      });
+      titleEditRef.current?.focus();
+    } else if (id === focusedTaskId) {
+      taskRef.current?.focus();
+    }
+  }, [id, focusedTaskId]);
+
+  return (
+    <TaskView
+      id={id}
+      createdAt={createdAt}
+      isBlocked={isBlocked}
+      isDone={isDone}
+      description={description}
+      title={title}
+      editingState={editingState}
+      handleKeyDown={handleKeyDown}
+      handleTitleChange={handleTitleChange}
+      handleDescriptionChange={handleDescriptionChange}
+      titleEditRef={titleEditRef}
+      descriptionEditRef={descriptionEditRef}
+      taskRef={taskRef}
+    />
+  );
+};
+
+export type TaskViewProps = TaskProps & {
+  descriptionEditRef: React.RefObject<HTMLTextAreaElement | null>;
+  editingState: EditingState | undefined;
+  handleDescriptionChange: (value: string) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleTitleChange: (value: string) => void;
+  taskRef: React.RefObject<HTMLDivElement | null>;
+  titleEditRef: React.RefObject<HTMLInputElement | null>;
+};
+
+export const TaskView = ({
+  createdAt,
+  description,
+  id,
+  isBlocked,
+  isDone,
+  isImportant,
+  isUrgent,
+  title,
+  editingState,
+  handleKeyDown,
+  handleTitleChange,
+  handleDescriptionChange,
+  titleEditRef,
+  descriptionEditRef,
+  taskRef,
+}: TaskViewProps) => {
   return (
     <div
       className={cn(
-        "flex w-96 flex-col gap-2 rounded-md border p-2 text-olive-12 focus:outline-2",
+        "flex w-full flex-col gap-2 rounded-md border px-4 py-2 text-olive-12 focus:outline-2",
         "border-olive-6 bg-olive-2 focus:bg-olive-5 focus:outline-olive-7",
         isBlocked && "border-red-6 bg-red-2 focus:bg-red-5 focus:outline-red-7",
         isDone &&
@@ -101,10 +174,11 @@ export const Task = ({
       )}
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      ref={ref}
+      ref={taskRef}
     >
       <div className="flex items-center justify-between gap-2">
-        {isEditingTitle ? (
+        {editingState?.taskCreatedAtTimestamp === createdAt.toISOString() &&
+        editingState?.target === "title" ? (
           <TaskInput
             type="input"
             defaultValue={title}
@@ -123,7 +197,8 @@ export const Task = ({
           )}
         </div>
       </div>
-      {isEditingDescription ? (
+      {editingState?.taskCreatedAtTimestamp === createdAt.toISOString() &&
+      editingState?.target === "description" ? (
         <TaskInput
           type="textarea"
           defaultValue={description ?? ""}
@@ -131,7 +206,7 @@ export const Task = ({
           ref={descriptionEditRef}
         />
       ) : (
-        <p className="text-base font-light">{description}</p>
+        description && <p className="text-base font-light">{description}</p>
       )}
     </div>
   );
