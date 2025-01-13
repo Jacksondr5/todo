@@ -15,6 +15,13 @@
       "when": 1736718426726,
       "tag": "0001_broken_speed",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736744674626,
+      "tag": "0002_dashing_silk_fever",
+      "breakpoints": true
     }
   ]
 }
