@@ -30,6 +30,8 @@ A todo app that I actually use.
 - I to edit todo importance
 - U to edit todo urgency
 - B to set todo as blocked
+- C to clear editing state
+- X to delete todo
 
 ## Ordering todos
 
