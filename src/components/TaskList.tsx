@@ -1,18 +1,16 @@
 "use client";
 
-import { api } from "~/trpc/react";
 import { Task } from "./Task";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useEditing } from "./EditingContext";
 
 export const TaskList = () => {
   const listRef = useRef<HTMLDivElement>(null);
   const { editingState, setEditingState, dispatch, tasks } = useEditing();
-  const createTask = api.todo.create.useMutation();
   // Focus the list when it mounts
   useEffect(() => {
     listRef.current?.focus();
-  }, [listRef.current]);
+  }, [listRef]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (editingState) {

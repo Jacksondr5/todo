@@ -1,8 +1,8 @@
 "use client";
 
-import { inferProcedureOutput } from "@trpc/server";
-import { createContext, useContext, ReactNode, useState } from "react";
-import { AppRouter } from "~/server/api/root";
+import { type inferProcedureOutput } from "@trpc/server";
+import { createContext, useContext, type ReactNode, useState } from "react";
+import { type AppRouter } from "~/server/api/root";
 import { api } from "~/trpc/react";
 
 type Action =
@@ -34,11 +34,11 @@ type EditingContextType = {
 // Create context with a default value
 const EditingContext = createContext<EditingContextType | undefined>(undefined);
 
-export const NEW_TASK_ID = -1 as const;
+export const NEW_TASK_ID = -1;
 
 // Create provider component
 export function EditingProvider({ children }: { children: ReactNode }) {
-  const [taskData, taskQuery] = api.todo.get.useSuspenseQuery();
+  const [taskData] = api.todo.get.useSuspenseQuery();
   const [tasks, setTasks] = useState(taskData);
   const [editingState, setEditingState] = useState<EditingState | undefined>(
     undefined,

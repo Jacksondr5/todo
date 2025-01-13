@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { EditingProvider } from "~/components/EditingContext";
-import { Task } from "~/components/Task";
 import { TaskList } from "~/components/TaskList";
 import { auth } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";

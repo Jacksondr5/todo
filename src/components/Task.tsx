@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Important } from "./svg/Important";
 import { Urgent } from "./svg/Urgent";
 import { TaskInput } from "./TaskInput";
 import { cn } from "~/lib/utils";
-import { EditingState, NEW_TASK_ID, useEditing } from "./EditingContext";
+import { type EditingState, NEW_TASK_ID, useEditing } from "./EditingContext";
 
 export type TaskProps = {
   createdAt: Date;
@@ -115,6 +115,8 @@ export const Task = ({
     } else if (id === focusedTaskId) {
       taskRef.current?.focus();
     }
+    // This is fine, we only need to run this when the task is created or focused
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, focusedTaskId]);
 
   return (
@@ -149,7 +151,6 @@ export type TaskViewProps = TaskProps & {
 export const TaskView = ({
   createdAt,
   description,
-  id,
   isBlocked,
   isDone,
   isImportant,

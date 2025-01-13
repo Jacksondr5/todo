@@ -25,8 +25,11 @@ const defaultProps = {
   isDone: false,
   descriptionEditRef: { current: null },
   editingState: undefined,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleDescriptionChange: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleKeyDown: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   handleTitleChange: () => {},
   taskRef: { current: null },
   titleEditRef: { current: null },
