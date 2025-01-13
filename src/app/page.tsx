@@ -19,9 +19,14 @@ export default async function Home() {
         >
           {session ? "Sign out" : "Sign in"}
         </Link>
-        <EditingProvider>
-          <TaskList />
-        </EditingProvider>
+        {session && (
+          <EditingProvider>
+            <TaskList />
+          </EditingProvider>
+        )}
+        {!session && (
+          <div className="mt-12 text-2xl text-olive-12">Sign in to start</div>
+        )}
       </main>
     </HydrateClient>
   );
