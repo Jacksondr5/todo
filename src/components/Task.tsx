@@ -125,6 +125,8 @@ export const Task = ({
       createdAt={createdAt}
       isBlocked={isBlocked}
       isDone={isDone}
+      isImportant={isImportant}
+      isUrgent={isUrgent}
       description={description}
       title={title}
       editingState={editingState}
@@ -207,7 +209,15 @@ export const TaskView = ({
           ref={descriptionEditRef}
         />
       ) : (
-        description && <p className="text-base font-light">{description}</p>
+        description && (
+          <div className="ml-2">
+            {description.split("\n").map((line, index) => (
+              <p key={index} className="text-base font-light">
+                {line}
+              </p>
+            ))}
+          </div>
+        )
       )}
     </div>
   );
