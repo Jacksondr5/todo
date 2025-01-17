@@ -5,8 +5,8 @@ import { Important } from "./svg/Important";
 import { Urgent } from "./svg/Urgent";
 import { TaskInput } from "./TaskInput";
 import { cn } from "~/lib/utils";
-import { type EditingState, NEW_TASK_ID, useEditing } from "./EditingContext";
-
+import { type EditingState, useEditing } from "../contexts/EditingContext";
+import { NEW_TASK_ID, useTasks } from "~/contexts/TaskContext";
 export type TaskProps = {
   createdAt: Date;
   description?: string;
@@ -28,8 +28,8 @@ export const Task = ({
   isUrgent,
   title,
 }: TaskProps) => {
-  const { dispatch, editingState, setEditingState, focusedTaskId } =
-    useEditing();
+  const { editingState, setEditingState } = useEditing();
+  const { dispatch, focusedTaskId } = useTasks();
 
   const taskRef = useRef<HTMLDivElement>(null);
   const titleEditRef = useRef<HTMLInputElement>(null);
