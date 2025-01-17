@@ -71,7 +71,7 @@ export const todoRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(tasks)
-        .set({ isImportant: input.isImportant })
+        .set({ isImportant: input.isImportant ?? null })
         .where(eq(tasks.id, input.id));
     }),
   setIsUrgent: protectedProcedure
@@ -79,7 +79,7 @@ export const todoRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       await ctx.db
         .update(tasks)
-        .set({ isUrgent: input.isUrgent })
+        .set({ isUrgent: input.isUrgent ?? null })
         .where(eq(tasks.id, input.id));
     }),
   setTitle: protectedProcedure

@@ -6,3 +6,4 @@
 - [ ] Figure out how to make sure that Vercel doesn't deploy until the DB is migrated. Blue/green?
 - [ ] Figure out how to test said migration in a PR, where is always starts from where prod is
 - [ ] How does this work on mobile?
+- [ ] Consider sub-tasks
