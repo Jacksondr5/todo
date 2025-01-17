@@ -8,7 +8,7 @@ A todo app that I actually use.
   - Able to work offline using local storage, syncs when network is available
 - Super user oriented
   - Data entry, navigation, etc. done by keyboard
-  - Command palette
+  - Command palette (is this necessary?)
 
 ## Todo style
 
@@ -39,3 +39,14 @@ A todo app that I actually use.
 2. Important & Not Urgent
 3. Not Important & Urgent
 4. Not Important & Not Urgent
+
+## Tags
+
+- Primarily meant to be a filtering mechanism, but maybe could be used for grouping as well.
+- Immediate use case: What do I need to do for this person/project/thing?
+
+## Due Date
+
+- Should help with urgency, though maybe urgency shouldn't be completely derived from due date.
+  - Maybe if there is no urgency, one can be derived from due date. Otherwise, use what's set. How can we visually distinguish between derived and set urgency? Different shades? Slight transparency?
+- How to select? Input is probably best, but date picker should be available. Need to make sure it's easy to navigate with keyboard.
