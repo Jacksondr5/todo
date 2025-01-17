@@ -1,7 +1,8 @@
 "use client";
 
 import { type inferProcedureOutput } from "@trpc/server";
-import { createContext, useContext, type ReactNode, useState } from "react";
+import { type ReactNode, createContext, useContext, useState } from "react";
+import { useEditing } from "~/contexts/EditingContext";
 import { type AppRouter } from "~/server/api/root";
 import { api } from "~/trpc/react";
 
@@ -16,36 +17,24 @@ type Action =
   | { type: "edit-done"; taskId: number; value: boolean }
   | { type: "delete-task"; taskId: number };
 
-export type EditingState = {
-  target: "title" | "description";
-  taskCreatedAtTimestamp: string;
-};
+export const NEW_TASK_ID = -1;
 
-// Define the context type
-type EditingContextType = {
-  editingState?: EditingState;
-  setEditingState: (state?: EditingState) => void;
+type TaskContextType = {
   dispatch: (action: Action) => void;
   tasks: inferProcedureOutput<AppRouter["todo"]["get"]>;
   focusedTaskId?: number;
-  // setFocusedTaskId: (id?: number) => void;
 };
 
-// Create context with a default value
-const EditingContext = createContext<EditingContextType | undefined>(undefined);
+const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const NEW_TASK_ID = -1;
-
-// Create provider component
-export function EditingProvider({ children }: { children: ReactNode }) {
+export function TaskProvider({ children }: { children: ReactNode }) {
   const [taskData] = api.todo.get.useSuspenseQuery();
   const [tasks, setTasks] = useState(taskData);
-  const [editingState, setEditingState] = useState<EditingState | undefined>(
-    undefined,
-  );
   const [focusedTaskId, setFocusedTaskId] = useState<number | undefined>(
     undefined,
   );
+  const { setEditingState } = useEditing();
+
   const createTask = api.todo.create.useMutation({
     onSuccess: (id, variables) => {
       // Update the task with the new id
@@ -173,25 +162,22 @@ export function EditingProvider({ children }: { children: ReactNode }) {
     }
   };
   return (
-    <EditingContext.Provider
+    <TaskContext.Provider
       value={{
-        editingState,
-        setEditingState,
-        tasks,
         dispatch,
         focusedTaskId,
+        tasks,
       }}
     >
       {children}
-    </EditingContext.Provider>
+    </TaskContext.Provider>
   );
 }
 
-// Create custom hook for using this context
-export function useEditing() {
-  const context = useContext(EditingContext);
+export function useTasks() {
+  const context = useContext(TaskContext);
   if (context === undefined) {
-    throw new Error("useEditing must be used within a EditingProvider");
+    throw new Error("useTasks must be used within a TaskProvider");
   }
   return context;
 }
