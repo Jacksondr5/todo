@@ -3,8 +3,8 @@ export type UrgentProps = {
   isUrgent?: boolean;
 };
 
-const urgentColor = "#dc2626";
-const notUrgentColor = "#2563eb";
+const urgentColor = "#e5484d";
+const notUrgentColor = "#0090ff";
 
 export const Urgent = ({ className, isUrgent }: UrgentProps) => {
   return (
