@@ -3,8 +3,8 @@ export type ImportantProps = {
   isImportant?: boolean;
 };
 
-const importantColor = "#dc2626";
-const notImportantColor = "#2563eb";
+const importantColor = "#e5484d";
+const notImportantColor = "#0090ff";
 
 export const Important = ({ className, isImportant }: ImportantProps) => {
   return (
