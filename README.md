@@ -40,6 +40,11 @@ A todo app that I actually use.
 3. Not Important & Urgent
 4. Not Important & Not Urgent
 
+## Mobile
+
+- Have a bottom bar that lets you do the actions
+  - Need to hide this when editing text
+
 ## Tags
 
 - Primarily meant to be a filtering mechanism, but maybe could be used for grouping as well.

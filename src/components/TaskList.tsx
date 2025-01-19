@@ -30,12 +30,12 @@ export const TaskList = () => {
 
   return (
     <div
-      className="mx-20 mt-18 flex w-full flex-col items-center border-2 border-grass-3 p-6"
+      className="mx-2 mt-18 flex h-full w-[calc(100%-1rem)] flex-col items-center border-2 border-grass-3 px-3 py-6 md:mx-20 md:w-[calc(100%-10rem)] md:px-6 md:py-6"
       tabIndex={0}
       ref={listRef}
       onKeyDown={handleKeyDown}
     >
-      <div className="flex w-5/6 flex-col items-center justify-center gap-2 xl:w-1/2">
+      <div className="flex w-full flex-col items-center justify-center gap-2 md:w-5/6 xl:w-1/2">
         {tasks.map((task) => (
           // Use createdAt as the key to avoid losing focus when a new task is created
           <Task key={task.createdAt.toISOString()} {...task} />

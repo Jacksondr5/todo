@@ -5,6 +5,7 @@ import { auth } from "~/server/auth";
 import { HydrateClient, api } from "~/trpc/server";
 import { TaskProvider } from "~/contexts/TaskContext";
 import { HelpWrapper } from "~/components/help/HelpWrapper";
+import { MobileBar } from "~/components/MobileBar";
 
 export default async function Home() {
   const session = await auth();
@@ -16,7 +17,7 @@ export default async function Home() {
     <HydrateClient>
       <EditingProvider>
         <HelpWrapper>
-          <main className="flex flex-col items-center justify-center">
+          <main className="flex h-[calc(100vh-4.5rem)] flex-col items-center">
             <Link
               className="absolute top-4 right-4 rounded-full bg-grass-9 px-6 py-2 font-semibold no-underline transition hover:bg-grass-10"
               href={session ? "/api/auth/signout" : "/api/auth/signin"}
@@ -26,6 +27,7 @@ export default async function Home() {
             {session && (
               <TaskProvider>
                 <TaskList />
+                <MobileBar />
               </TaskProvider>
             )}
             {!session && (

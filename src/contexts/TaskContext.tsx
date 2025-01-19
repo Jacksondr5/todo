@@ -1,9 +1,8 @@
 "use client";
 
-import { type inferProcedureOutput } from "@trpc/server";
 import { type ReactNode, createContext, useContext, useState } from "react";
 import { useEditing } from "~/contexts/EditingContext";
-import { type AppRouter } from "~/server/api/root";
+import { type ClientTask } from "~/lib/types";
 import { api } from "~/trpc/react";
 
 type Action =
@@ -21,8 +20,13 @@ export const NEW_TASK_ID = -1;
 
 type TaskContextType = {
   dispatch: (action: Action) => void;
-  tasks: inferProcedureOutput<AppRouter["todo"]["get"]>;
+  tasks: ClientTask[];
+  // This is used to keep track of the task that is currently focused
   focusedTaskId?: number;
+  setFocusedTaskId: (taskId?: number) => void;
+  // This is used when the context wants to target a task for focus
+  targetTaskId?: number;
+  setTargetTaskId: (taskId?: number) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -31,6 +35,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const [taskData] = api.todo.get.useSuspenseQuery();
   const [tasks, setTasks] = useState(taskData);
   const [focusedTaskId, setFocusedTaskId] = useState<number | undefined>(
+    undefined,
+  );
+  const [targetTaskId, setTargetTaskId] = useState<number | undefined>(
     undefined,
   );
   const { setEditingState } = useEditing();
@@ -155,7 +162,8 @@ export function TaskProvider({ children }: { children: ReactNode }) {
             : deletedIndex + 1;
         const nextTaskId = tasks[nextIndex]?.id;
         setTasks(tasks.filter((task) => task.id !== action.taskId));
-        setFocusedTaskId(nextTaskId);
+        if (!nextTaskId) console.warn("No next task found");
+        setTargetTaskId(nextTaskId);
         break;
       default:
         throw new Error("Invalid action");
@@ -166,6 +174,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
       value={{
         dispatch,
         focusedTaskId,
+        setFocusedTaskId,
+        setTargetTaskId,
+        targetTaskId,
         tasks,
       }}
     >
