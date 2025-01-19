@@ -29,7 +29,7 @@ export const Task = ({
   title,
 }: TaskProps) => {
   const { editingState, setEditingState } = useEditing();
-  const { dispatch, focusedTaskId } = useTasks();
+  const { dispatch, targetTaskId, setFocusedTaskId } = useTasks();
 
   const taskRef = useRef<HTMLDivElement>(null);
   const titleEditRef = useRef<HTMLInputElement>(null);
@@ -112,12 +112,12 @@ export const Task = ({
         taskCreatedAtTimestamp: createdAt.toISOString(),
       });
       titleEditRef.current?.focus();
-    } else if (id === focusedTaskId) {
+    } else if (id === targetTaskId) {
       taskRef.current?.focus();
     }
     // This is fine, we only need to run this when the task is created or focused
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, focusedTaskId]);
+  }, [id, targetTaskId]);
 
   return (
     <TaskView
@@ -130,9 +130,10 @@ export const Task = ({
       description={description}
       title={title}
       editingState={editingState}
-      handleKeyDown={handleKeyDown}
-      handleTitleChange={handleTitleChange}
-      handleDescriptionChange={handleDescriptionChange}
+      onFocus={() => setFocusedTaskId(id)}
+      onKeyDown={handleKeyDown}
+      onTitleChange={handleTitleChange}
+      onDescriptionChange={handleDescriptionChange}
       titleEditRef={titleEditRef}
       descriptionEditRef={descriptionEditRef}
       taskRef={taskRef}
@@ -143,9 +144,10 @@ export const Task = ({
 export type TaskViewProps = TaskProps & {
   descriptionEditRef: React.RefObject<HTMLTextAreaElement | null>;
   editingState: EditingState | undefined;
-  handleDescriptionChange: (value: string) => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  handleTitleChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
+  onFocus: () => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onTitleChange: (value: string) => void;
   taskRef: React.RefObject<HTMLDivElement | null>;
   titleEditRef: React.RefObject<HTMLInputElement | null>;
 };
@@ -153,18 +155,19 @@ export type TaskViewProps = TaskProps & {
 export const TaskView = ({
   createdAt,
   description,
+  descriptionEditRef,
+  editingState,
   isBlocked,
   isDone,
   isImportant,
   isUrgent,
-  title,
-  editingState,
-  handleKeyDown,
-  handleTitleChange,
-  handleDescriptionChange,
-  titleEditRef,
-  descriptionEditRef,
+  onFocus,
+  onKeyDown,
+  onTitleChange,
+  onDescriptionChange,
   taskRef,
+  title,
+  titleEditRef,
 }: TaskViewProps) => {
   return (
     <div
@@ -175,7 +178,8 @@ export const TaskView = ({
         isDone &&
           "border-grass-6 bg-grass-3 focus:bg-grass-5 focus:outline-grass-7",
       )}
-      onKeyDown={handleKeyDown}
+      onFocus={onFocus}
+      onKeyDown={onKeyDown}
       tabIndex={0}
       ref={taskRef}
     >
@@ -185,7 +189,7 @@ export const TaskView = ({
           <TaskInput
             type="input"
             defaultValue={title}
-            onChange={handleTitleChange}
+            onChange={onTitleChange}
             ref={titleEditRef}
           />
         ) : (
@@ -205,7 +209,7 @@ export const TaskView = ({
         <TaskInput
           type="textarea"
           defaultValue={description ?? ""}
-          onChange={handleDescriptionChange}
+          onChange={onDescriptionChange}
           ref={descriptionEditRef}
         />
       ) : (

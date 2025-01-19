@@ -3,9 +3,10 @@ import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { tasks } from "~/server/db/schema/todo";
+import { type ClientTask } from "~/lib/types";
 
 export const todoRouter = createTRPCRouter({
-  get: protectedProcedure.query(async ({ ctx }) => {
+  get: protectedProcedure.query<ClientTask[]>(async ({ ctx }) => {
     const data = await ctx.db
       .select({
         createdAt: tasks.createdAt,
