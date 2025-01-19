@@ -179,6 +179,7 @@ export const TaskView = ({
           "border-grass-6 bg-grass-3 focus:bg-grass-5 focus:outline-grass-7",
       )}
       onFocus={onFocus}
+      onClick={onFocus}
       onKeyDown={onKeyDown}
       tabIndex={0}
       ref={taskRef}
