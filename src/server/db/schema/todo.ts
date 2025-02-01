@@ -6,15 +6,12 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { createTable } from "../utils";
-import { users } from "./auth";
 import { sql } from "drizzle-orm";
 
 export const tasks = createTable("task", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull(),
-  createdById: varchar("created_by", { length: 255 })
-    .notNull()
-    .references(() => users.id),
+  createdById: varchar("created_by", { length: 255 }).notNull(),
   description: text("description"),
   isBlocked: boolean("is_blocked").default(false).notNull(),
   isDone: boolean("is_done").default(false).notNull(),
