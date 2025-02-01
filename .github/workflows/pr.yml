@@ -8,9 +8,8 @@ jobs:
   validate:
     name: Validate PR
     env:
-      AUTH_SECRET: TBD
-      AUTH_GITHUB_ID: TBD
-      AUTH_GITHUB_SECRET: TBD
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+      CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
       POSTGRES_URL: ${{ secrets.DEV_POSTGRES_URL }}
     runs-on: ubuntu-latest
     steps:

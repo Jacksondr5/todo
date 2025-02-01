@@ -18,7 +18,7 @@ export const todoRouter = createTRPCRouter({
         title: tasks.title,
       })
       .from(tasks)
-      .where(eq(tasks.createdById, ctx.session.user.id))
+      .where(eq(tasks.createdById, ctx.auth.userId))
       .orderBy(asc(tasks.createdAt));
 
     // Map the null values to undefined because that's easier for React
@@ -36,7 +36,7 @@ export const todoRouter = createTRPCRouter({
         .insert(tasks)
         .values({
           createdAt: input.createdAt,
-          createdById: ctx.session.user.id,
+          createdById: ctx.auth.userId,
           title: input.title,
         })
         .returning({ id: tasks.id });
