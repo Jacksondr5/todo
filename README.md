@@ -50,3 +50,11 @@ A todo app that I actually use.
 - Should help with urgency, though maybe urgency shouldn't be completely derived from due date.
   - Maybe if there is no urgency, one can be derived from due date. Otherwise, use what's set. How can we visually distinguish between derived and set urgency? Different shades? Slight transparency?
 - How to select? Input is probably best, but date picker should be available. Need to make sure it's easy to navigate with keyboard.
+
+## Conversation Topics
+
+- Meant to help me keep track of things I need to talk to people about
+- Should be a different view than todo. Either different "page" or drawer or something
+- List organized by person
+- Each person has a list of topics. Same title/description as a todo. Can be marked as done, blocked (?)
+- Items should be able to be organized manually. No importance/urgency. Maybe use a drag and drop library so it's mobile friendly and has the keyboard support baked in.
