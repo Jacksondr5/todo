@@ -5,19 +5,21 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
 export type TaskInputProps = {
-  type: "input" | "textarea";
+  dataTestId: string;
   defaultValue: string;
   onChange: (value: string) => void;
   ref: React.RefObject<TaskInputRef | null>;
+  type: "input" | "textarea";
 };
 
 type TaskInputRef = HTMLInputElement | HTMLTextAreaElement;
 
 export const TaskInput = ({
-  type,
+  dataTestId,
   defaultValue,
   onChange,
   ref,
+  type,
 }: TaskInputProps) => {
   const [value, setValue] = useState(defaultValue);
 
@@ -34,6 +36,7 @@ export const TaskInput = ({
   }, [ref]);
 
   const sharedProps = {
+    "data-testid": dataTestId,
     onChange: (e: React.ChangeEvent<TaskInputRef>) => setValue(e.target.value),
     onKeyDown: handleKeyDown,
     value: value,

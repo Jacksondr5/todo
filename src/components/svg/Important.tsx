@@ -1,22 +1,26 @@
-export type ImportantProps = {
-  className?: string;
+import { getSvgStyles, svgColors, type SvgProps } from "./utils";
+
+export type ImportantProps = SvgProps & {
   isImportant?: boolean;
 };
 
-const importantColor = "#e5484d";
-const notImportantColor = "#0090ff";
-
-export const Important = ({ className, isImportant }: ImportantProps) => {
+export const Important = ({
+  dataTestId,
+  isImportant,
+  size,
+}: ImportantProps) => {
+  const color = isImportant ? svgColors.red : svgColors.blue;
   return (
     <svg
+      data-testid={dataTestId}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
-      stroke={isImportant ? importantColor : notImportantColor}
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={getSvgStyles({ size })}
     >
       <circle cx="12" cy="12" r="10" />
       <line x1="12" x2="12" y1="8" y2="12" />
