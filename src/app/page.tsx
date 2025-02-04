@@ -13,7 +13,10 @@ import {
 
 function SignInOutButton({ type }: { type: "signin" | "signout" }) {
   return (
-    <button className="absolute top-4 right-4 rounded-full bg-grass-9 px-6 py-2 font-semibold no-underline transition hover:bg-grass-10">
+    <button
+      className="absolute top-4 right-4 rounded-full bg-grass-9 px-6 py-2 font-semibold no-underline transition hover:bg-grass-10"
+      data-testid={type === "signin" ? "sign-in-button" : "sign-out-button"}
+    >
       {type === "signin" ? "Sign in" : "Sign out"}
     </button>
   );

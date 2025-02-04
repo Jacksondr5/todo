@@ -1,22 +1,21 @@
-export type UrgentProps = {
-  className?: string;
+import { svgColors, getSvgStyles, type SvgProps } from "./utils";
+
+export type UrgentProps = SvgProps & {
   isUrgent?: boolean;
 };
 
-const urgentColor = "#e5484d";
-const notUrgentColor = "#0090ff";
-
-export const Urgent = ({ className, isUrgent }: UrgentProps) => {
+export const Urgent = ({ dataTestId, isUrgent, size }: UrgentProps) => {
   return (
     <svg
+      data-testid={dataTestId}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
-      stroke={isUrgent ? urgentColor : notUrgentColor}
+      stroke={isUrgent ? svgColors.red : svgColors.blue}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={getSvgStyles({ size })}
     >
       <circle cx="12" cy="12" r="10" />
       <polyline points="12 6 12 12 16 14" />

@@ -2,14 +2,14 @@ import { Separator } from "../ui/separator";
 
 export const keybindings = {
   EDIT_TITLE: "e",
-  MARK_DONE: "q",
+  TOGGLE_DONE: "q",
   ADD_TODO: "a",
   EDIT_DESCRIPTION: "d",
   EDIT_DUE_DATE: "f",
   EDIT_TAGS: "t",
   EDIT_IMPORTANCE: "i",
   EDIT_URGENCY: "u",
-  SET_BLOCKED: "b",
+  TOGGLE_BLOCKED: "b",
   CLEAR_EDITING_STATE: "c",
   DELETE_TODO: "x",
   OPEN_HELP: "/",
