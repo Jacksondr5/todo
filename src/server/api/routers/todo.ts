@@ -16,6 +16,7 @@ export const todoRouter = createTRPCRouter({
         isImportant: tasks.isImportant,
         isUrgent: tasks.isUrgent,
         title: tasks.title,
+        updatedAt: tasks.updatedAt,
       })
       .from(tasks)
       .where(eq(tasks.createdById, ctx.auth.userId))
