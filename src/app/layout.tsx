@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { LoadingSpinner } from "~/components/LoadingSpinner";
 
 export const metadata: Metadata = {
   title: "J5 Todo",
@@ -18,7 +19,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body className="min-h-screen bg-grass-1">
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <LoadingSpinner />
+            {children}
+          </TRPCReactProvider>
         </body>
       </html>
     </ClerkProvider>
