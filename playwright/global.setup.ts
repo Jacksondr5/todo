@@ -33,6 +33,15 @@ setup("authenticate and save state to storage", async ({ page }) => {
       password,
     },
   });
+  // await expect(page.getByTestId("sign-in-button")).toBeVisible();
+  // await page.getByTestId("sign-in-button").click();
+  // await page.waitForURL("/sign-in");
+  // await page.getByLabel("Email address").fill(username);
+  // await page.getByText("Continue").click();
+  // await page.waitForURL("/sign-in/factor-one");
+  // await page.getByLabel("Password").fill(password);
+  // await page.getByText("Continue").click();
+  // await page.waitForURL("/");
   await expect(page.getByTestId("sign-out-button")).toBeVisible();
 
   await page.context().storageState({ path: authFile });
