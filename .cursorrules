@@ -1,2 +1,4 @@
 @url https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale
 When selecting a color in a Tailwind class name where the color is either grass or olive, use the scale from the URL above.
+
+Always alphabetize parameters, types, and interfaces, both when creating them and when using them.
