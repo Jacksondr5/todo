@@ -8,6 +8,7 @@ import { api } from "~/trpc/react";
 
 type Action =
   | { type: "new-task" }
+  | { type: "refresh" }
   | { type: "create"; value: { title: string; createdAt: Date } }
   | { type: "edit-title"; taskId: number; value: string }
   | { type: "edit-description"; taskId: number; value: string }
@@ -28,7 +29,7 @@ type TaskContextType = {
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 export function TaskProvider({ children }: { children: ReactNode }) {
-  const [taskData] = api.todo.get.useSuspenseQuery();
+  const [taskData, taskQuery] = api.todo.get.useSuspenseQuery();
   const [tasks, setTasks] = useState(taskData);
   const [focusedTaskId, setFocusedTaskId] = useState<number | undefined>(
     undefined,
@@ -52,7 +53,14 @@ export function TaskProvider({ children }: { children: ReactNode }) {
   const setIsUrgent = api.todo.setIsUrgent.useMutation();
   const setIsDone = api.todo.setIsDone.useMutation();
   const deleteTask = api.todo.delete.useMutation();
+  const refresh = async () => {
+    const newTasks = await taskQuery.refetch();
+    if (newTasks.data) {
+      setTasks(newTasks.data);
+    }
+  };
   const dispatch = (action: Action) => {
+    const now = new Date();
     switch (action.type) {
       case "new-task":
         setTasks([
@@ -66,6 +74,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
             isImportant: undefined,
             isUrgent: undefined,
             title: "",
+            updatedAt: now,
           },
         ]);
         break;
@@ -82,6 +91,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
           createdAt: action.value.createdAt,
           title: action.value.title,
         });
+        break;
+      case "refresh":
+        void refresh();
         break;
       case "edit-title":
         setTitle.mutate({ id: action.taskId, title: action.value });

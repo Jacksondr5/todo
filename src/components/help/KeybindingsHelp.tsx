@@ -12,6 +12,7 @@ export const keybindings = {
   SET_BLOCKED: "b",
   CLEAR_EDITING_STATE: "c",
   DELETE_TODO: "x",
+  REFRESH: "r",
   OPEN_HELP: "/",
 } as const;
 
@@ -36,6 +37,7 @@ const keybindingHelps: KeybindingHelp[] = [
   { key: "b", description: "Set as blocked" },
   // { key: "c", description: "Clear editing state" },
   { key: "x", description: "Delete todo" },
+  { key: "r", description: "Refresh" },
   { key: "/", description: "Open help" },
 ];
 

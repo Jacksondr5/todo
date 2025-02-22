@@ -25,12 +25,8 @@ jobs:
       - name: Format check
         run: pnpm format:check
 
-      # Disabling this for a bit, since Vercel should be doing this
-      # - name: Lint
-      #   run: pnpm lint
-
-      # - name: Build
-      #   run: pnpm build
+      - name: Unit tests
+        run: pnpm test:unit
 
       - name: Check that migrations were committed
         uses: ./.github/actions/migration

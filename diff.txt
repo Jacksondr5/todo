@@ -1,0 +1,273 @@
+diff --git a/.github/workflows/pr.yml b/.github/workflows/pr.yml
+index 8adad43..b1fdf31 100644
+--- a/.github/workflows/pr.yml
++++ b/.github/workflows/pr.yml
+@@ -25,12 +25,8 @@ jobs:
+       - name: Format check
+         run: pnpm format:check
+ 
+-      # Disabling this for a bit, since Vercel should be doing this
+-      # - name: Lint
+-      #   run: pnpm lint
+-
+-      # - name: Build
+-      #   run: pnpm build
++      - name: Unit tests
++        run: pnpm test:unit
+ 
+       - name: Check that migrations were committed
+         uses: ./.github/actions/migration
+diff --git a/package.json b/package.json
+index d9b67c7..12302b7 100644
+--- a/package.json
++++ b/package.json
+@@ -18,6 +18,7 @@
+     "start": "next start",
+     "storybook": "storybook dev -p 6006",
+     "storybook:build": "storybook build",
++    "test:unit": "vitest",
+     "typecheck": "tsc --noEmit"
+   },
+   "dependencies": {
+@@ -32,6 +33,7 @@
+     "@trpc/server": "11.0.0-rc.682",
+     "class-variance-authority": "^0.7.1",
+     "clsx": "^2.1.1",
++    "dayjs": "^1.11.13",
+     "drizzle-orm": "^0.39.3",
+     "geist": "^1.3.1",
+     "lucide-react": "^0.475.0",
+@@ -75,7 +77,8 @@
+     "prettier-plugin-tailwindcss": "^0.6.11",
+     "storybook": "^8.5.6",
+     "tailwindcss": "4.0.6",
+-    "typescript": "^5.7.3"
++    "typescript": "^5.7.3",
++    "vitest": "^3.0.6"
+   },
+   "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+   "ct3aMetadata": {
+diff --git a/src/app/layout.tsx b/src/app/layout.tsx
+index 138e284..34ab9ed 100644
+--- a/src/app/layout.tsx
++++ b/src/app/layout.tsx
+@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
+ import { type Metadata } from "next";
+ 
+ import { TRPCReactProvider } from "~/trpc/react";
++import { LoadingSpinner } from "~/components/LoadingSpinner";
+ 
+ export const metadata: Metadata = {
+   title: "J5 Todo",
+@@ -18,7 +19,10 @@ export default function RootLayout({
+     <ClerkProvider>
+       <html lang="en" className={`${GeistSans.variable}`}>
+         <body className="min-h-screen bg-grass-1">
+-          <TRPCReactProvider>{children}</TRPCReactProvider>
++          <TRPCReactProvider>
++            <LoadingSpinner />
++            {children}
++          </TRPCReactProvider>
+         </body>
+       </html>
+     </ClerkProvider>
+diff --git a/src/components/TaskList.tsx b/src/components/TaskList.tsx
+index f9b30f7..c1a03a1 100644
+--- a/src/components/TaskList.tsx
++++ b/src/components/TaskList.tsx
+@@ -4,12 +4,19 @@ import { Task } from "./Task";
+ import { useEffect, useRef } from "react";
+ import { useEditing } from "../contexts/EditingContext";
+ import { useTasks } from "~/contexts/TaskContext";
+-
++import { partition } from "~/lib/utils";
++import dayjs from "dayjs";
+ export const TaskList = () => {
+   const listRef = useRef<HTMLDivElement>(null);
+   const { editingState, setEditingState } = useEditing();
+   const { dispatch, tasks } = useTasks();
+ 
++  const now = dayjs();
++  const [oldTasks, newTasks] = partition(tasks, (task) => {
++    const diff = now.diff(task.updatedAt, "minute");
++    return diff >= 1;
++  });
++
+   // Focus the list when it mounts
+   useEffect(() => {
+     listRef.current?.focus();
+@@ -26,6 +33,9 @@ export const TaskList = () => {
+     if (e.key === "c") {
+       setEditingState(undefined);
+     }
++    if (e.key === "r") {
++      dispatch({ type: "refresh" });
++    }
+   };
+ 
+   return (
+@@ -36,11 +46,21 @@ export const TaskList = () => {
+       onKeyDown={handleKeyDown}
+     >
+       <div className="flex w-5/6 flex-col items-center justify-center gap-2 xl:w-1/2">
+-        {tasks.map((task) => (
++        {newTasks.map((task) => (
+           // Use createdAt as the key to avoid losing focus when a new task is created
+           <Task key={task.createdAt.toISOString()} {...task} />
+         ))}
+       </div>
++      {oldTasks.length > 0 && (
++        <div className="mt-4 flex w-5/6 flex-col items-center justify-center gap-2 rounded-lg border-4 border-orange-3 p-2 xl:w-1/2">
++          <h2 className="text-2xl font-bold text-olive-11">
++            Review these tasks
++          </h2>
++          {oldTasks.map((task) => (
++            <Task key={task.createdAt.toISOString()} {...task} />
++          ))}
++        </div>
++      )}
+     </div>
+   );
+ };
+diff --git a/src/components/help/KeybindingsHelp.tsx b/src/components/help/KeybindingsHelp.tsx
+index d592b53..09966af 100644
+--- a/src/components/help/KeybindingsHelp.tsx
++++ b/src/components/help/KeybindingsHelp.tsx
+@@ -12,6 +12,7 @@ export const keybindings = {
+   SET_BLOCKED: "b",
+   CLEAR_EDITING_STATE: "c",
+   DELETE_TODO: "x",
++  REFRESH: "r",
+   OPEN_HELP: "/",
+ } as const;
+ 
+@@ -36,6 +37,7 @@ const keybindingHelps: KeybindingHelp[] = [
+   { key: "b", description: "Set as blocked" },
+   // { key: "c", description: "Clear editing state" },
+   { key: "x", description: "Delete todo" },
++  { key: "r", description: "Refresh" },
+   { key: "/", description: "Open help" },
+ ];
+ 
+diff --git a/src/contexts/TaskContext.tsx b/src/contexts/TaskContext.tsx
+index 911ebbf..0d6f3b7 100644
+--- a/src/contexts/TaskContext.tsx
++++ b/src/contexts/TaskContext.tsx
+@@ -8,6 +8,7 @@ import { api } from "~/trpc/react";
+ 
+ type Action =
+   | { type: "new-task" }
++  | { type: "refresh" }
+   | { type: "create"; value: { title: string; createdAt: Date } }
+   | { type: "edit-title"; taskId: number; value: string }
+   | { type: "edit-description"; taskId: number; value: string }
+@@ -28,7 +29,7 @@ type TaskContextType = {
+ const TaskContext = createContext<TaskContextType | undefined>(undefined);
+ 
+ export function TaskProvider({ children }: { children: ReactNode }) {
+-  const [taskData] = api.todo.get.useSuspenseQuery();
++  const [taskData, taskQuery] = api.todo.get.useSuspenseQuery();
+   const [tasks, setTasks] = useState(taskData);
+   const [focusedTaskId, setFocusedTaskId] = useState<number | undefined>(
+     undefined,
+@@ -52,7 +53,14 @@ export function TaskProvider({ children }: { children: ReactNode }) {
+   const setIsUrgent = api.todo.setIsUrgent.useMutation();
+   const setIsDone = api.todo.setIsDone.useMutation();
+   const deleteTask = api.todo.delete.useMutation();
++  const refresh = async () => {
++    const newTasks = await taskQuery.refetch();
++    if (newTasks.data) {
++      setTasks(newTasks.data);
++    }
++  };
+   const dispatch = (action: Action) => {
++    const now = new Date();
+     switch (action.type) {
+       case "new-task":
+         setTasks([
+@@ -66,6 +74,7 @@ export function TaskProvider({ children }: { children: ReactNode }) {
+             isImportant: undefined,
+             isUrgent: undefined,
+             title: "",
++            updatedAt: now,
+           },
+         ]);
+         break;
+@@ -83,6 +92,9 @@ export function TaskProvider({ children }: { children: ReactNode }) {
+           title: action.value.title,
+         });
+         break;
++      case "refresh":
++        void refresh();
++        break;
+       case "edit-title":
+         setTitle.mutate({ id: action.taskId, title: action.value });
+         setTasks(
+diff --git a/src/lib/utils.ts b/src/lib/utils.ts
+index a5ef193..41532e1 100644
+--- a/src/lib/utils.ts
++++ b/src/lib/utils.ts
+@@ -4,3 +4,14 @@ import { twMerge } from "tailwind-merge";
+ export function cn(...inputs: ClassValue[]) {
+   return twMerge(clsx(inputs));
+ }
++
++export const partition = <T>(
++  array: T[],
++  predicate: (item: T) => boolean,
++): [T[], T[]] => {
++  return array.reduce<[T[], T[]]>(
++    ([pass, fail], elem) =>
++      predicate(elem) ? [[...pass, elem], fail] : [pass, [...fail, elem]],
++    [[], []],
++  );
++};
+diff --git a/src/server/api/routers/todo.ts b/src/server/api/routers/todo.ts
+index 76ed596..82e5883 100644
+--- a/src/server/api/routers/todo.ts
++++ b/src/server/api/routers/todo.ts
+@@ -16,6 +16,7 @@ export const todoRouter = createTRPCRouter({
+         isImportant: tasks.isImportant,
+         isUrgent: tasks.isUrgent,
+         title: tasks.title,
++        updatedAt: tasks.updatedAt,
+       })
+       .from(tasks)
+       .where(eq(tasks.createdById, ctx.auth.userId))
+diff --git a/src/styles/globals.css b/src/styles/globals.css
+index 2cd07b4..a3dc5bf 100644
+--- a/src/styles/globals.css
++++ b/src/styles/globals.css
+@@ -43,6 +43,32 @@
+   --color-red-5: #611623;
+   --color-red-6: #72232d;
+   --color-red-7: #8c333a;
++
++  --color-tomato-1: #181111;
++  --color-tomato-2: #1f1513;
++  --color-tomato-3: #391714;
++  --color-tomato-4: #4e1511;
++  --color-tomato-5: #5e1c16;
++  --color-tomato-6: #6e2920;
++  --color-tomato-7: #853a2d;
++  --color-tomato-8: #ac4d39;
++  --color-tomato-9: #e54d2e;
++  --color-tomato-10: #ec6142;
++  --color-tomato-11: #ff977d;
++  --color-tomato-12: #fbd3cb;
++
++  --color-orange-1: #17120e;
++  --color-orange-2: #1e160f;
++  --color-orange-3: #331e0b;
++  --color-orange-4: #462100;
++  --color-orange-5: #562800;
++  --color-orange-6: #66350c;
++  --color-orange-7: #7e451d;
++  --color-orange-8: #a35829;
++  --color-orange-9: #f76b15;
++  --color-orange-10: #ff801f;
++  --color-orange-11: #ffa057;
++  --color-orange-12: #ffe0c2;
+ }
+ 
+ /*
