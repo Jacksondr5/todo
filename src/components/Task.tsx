@@ -32,8 +32,6 @@ export const Task = ({
   const { dispatch, focusedTaskId } = useTasks();
 
   const taskRef = useRef<HTMLDivElement>(null);
-  const titleEditRef = useRef<HTMLInputElement>(null);
-  const descriptionEditRef = useRef<HTMLTextAreaElement>(null);
 
   const handleTitleChange = (value: string) => {
     if (id === NEW_TASK_ID) {
@@ -90,13 +88,11 @@ export const Task = ({
         target: "title",
         taskCreatedAtTimestamp: createdAt.toISOString(),
       });
-      titleEditRef.current?.focus();
     } else if (e.key === "d") {
       setEditingState({
         target: "description",
         taskCreatedAtTimestamp: createdAt.toISOString(),
       });
-      descriptionEditRef.current?.focus();
     } else if (e.key === "q") {
       dispatch({ type: "edit-done", taskId: id, value: !isDone });
     } else if (e.key === "x") {
@@ -111,7 +107,6 @@ export const Task = ({
         target: "title",
         taskCreatedAtTimestamp: createdAt.toISOString(),
       });
-      titleEditRef.current?.focus();
     } else if (id === focusedTaskId) {
       taskRef.current?.focus();
     }
@@ -133,21 +128,17 @@ export const Task = ({
       handleKeyDown={handleKeyDown}
       handleTitleChange={handleTitleChange}
       handleDescriptionChange={handleDescriptionChange}
-      titleEditRef={titleEditRef}
-      descriptionEditRef={descriptionEditRef}
       taskRef={taskRef}
     />
   );
 };
 
 export type TaskViewProps = TaskProps & {
-  descriptionEditRef: React.RefObject<HTMLTextAreaElement | null>;
   editingState: EditingState | undefined;
   handleDescriptionChange: (value: string) => void;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleTitleChange: (value: string) => void;
   taskRef: React.RefObject<HTMLDivElement | null>;
-  titleEditRef: React.RefObject<HTMLInputElement | null>;
 };
 
 export const TaskView = ({
@@ -162,8 +153,6 @@ export const TaskView = ({
   handleKeyDown,
   handleTitleChange,
   handleDescriptionChange,
-  titleEditRef,
-  descriptionEditRef,
   taskRef,
 }: TaskViewProps) => {
   return (
@@ -186,7 +175,6 @@ export const TaskView = ({
             type="input"
             defaultValue={title}
             onChange={handleTitleChange}
-            ref={titleEditRef}
           />
         ) : (
           <h3 className="text-base font-medium">{title}</h3>
@@ -206,7 +194,6 @@ export const TaskView = ({
           type="textarea"
           defaultValue={description ?? ""}
           onChange={handleDescriptionChange}
-          ref={descriptionEditRef}
         />
       ) : (
         description && (

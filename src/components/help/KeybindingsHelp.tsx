@@ -13,6 +13,8 @@ export const keybindings = {
   CLEAR_EDITING_STATE: "c",
   DELETE_TODO: "x",
   OPEN_HELP: "/",
+  SAVE_VALUE: "Ctrl+s",
+  TOGGLE_BOSS_CONVERSATION: "Shift+b",
 } as const;
 
 type KeybindingValues = (typeof keybindings)[keyof typeof keybindings];
@@ -37,6 +39,8 @@ const keybindingHelps: KeybindingHelp[] = [
   // { key: "c", description: "Clear editing state" },
   { key: "x", description: "Delete todo" },
   { key: "/", description: "Open help" },
+  { key: "Ctrl+s", description: "Save value" },
+  { key: "Shift+b", description: "Toggle boss conversation view" },
 ];
 
 export const KeybindingsHelp = () => {
@@ -47,7 +51,7 @@ export const KeybindingsHelp = () => {
       <ul className="list-none text-olive-11">
         {keybindingHelps.map((help) => (
           <li key={help.key}>
-            {help.key}: {help.description}
+            {help.key.split("+").join(" + ")}: {help.description}
           </li>
         ))}
       </ul>

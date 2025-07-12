@@ -1,5 +1,6 @@
 import { todoRouter } from "~/server/api/routers/todo";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { bossConversationRouter } from "./routers/bossConversation";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   todo: todoRouter,
+  bossConversation: bossConversationRouter,
 });
 
 // export type definition of API

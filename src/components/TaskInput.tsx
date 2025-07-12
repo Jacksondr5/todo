@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
@@ -8,7 +8,7 @@ export type TaskInputProps = {
   type: "input" | "textarea";
   defaultValue: string;
   onChange: (value: string) => void;
-  ref: React.RefObject<TaskInputRef | null>;
+  // ref: React.RefObject<TaskInputRef | null>;
 };
 
 type TaskInputRef = HTMLInputElement | HTMLTextAreaElement;
@@ -17,9 +17,10 @@ export const TaskInput = ({
   type,
   defaultValue,
   onChange,
-  ref,
+  // ref,
 }: TaskInputProps) => {
   const [value, setValue] = useState(defaultValue);
+  const ref = useRef<TaskInputRef | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent<TaskInputRef>) => {
     if (e.ctrlKey && e.key === "Enter") {
