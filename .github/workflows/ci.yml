@@ -15,6 +15,8 @@ jobs:
     env:
       # Skip env validation during CI builds
       SKIP_ENV_VALIDATION: true
+      # Provide placeholder Convex URL for build (ConvexReactClient requires it)
+      NEXT_PUBLIC_CONVEX_URL: https://placeholder.convex.cloud
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
