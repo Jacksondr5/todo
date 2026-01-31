@@ -1,4 +1,4 @@
-import { Separator } from "../ui/separator";
+import { Separator } from "~/components/ui/separator";
 
 export const keybindings = {
   EDIT_TITLE: "e",
@@ -43,10 +43,17 @@ const keybindingHelps: KeybindingHelp[] = [
 
 export const KeybindingsHelp = () => {
   return (
-    <div className="absolute right-4 bottom-4 rounded-md bg-olive-5 p-4">
-      <h2 className="text-2xl font-bold text-olive-12">Keybindings</h2>
-      <Separator className="m-1.5 bg-olive-7" />
-      <ul className="list-none text-olive-11">
+    <div
+      className="bg-olive-5 absolute bottom-4 right-4 rounded-md p-4"
+      role="dialog"
+      aria-labelledby="keybindings-title"
+      aria-describedby="keybindings-list"
+    >
+      <h2 className="text-olive-12 text-2xl font-bold" id="keybindings-title">
+        Keybindings
+      </h2>
+      <Separator className="bg-olive-7 m-1.5" />
+      <ul className="text-olive-11 list-none" id="keybindings-list">
         {keybindingHelps.map((help) => (
           <li key={help.key}>
             {help.key}: {help.description}

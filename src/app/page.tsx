@@ -1,7 +1,7 @@
+"use client";
+
 import { EditingProvider } from "~/contexts/EditingContext";
 import { TaskList } from "~/components/TaskList";
-import { auth } from "@clerk/nextjs/server";
-import { HydrateClient, api } from "~/trpc/server";
 import { TaskProvider } from "~/contexts/TaskContext";
 import { HelpWrapper } from "~/components/help/HelpWrapper";
 import {
@@ -10,45 +10,34 @@ import {
   SignedIn,
   SignOutButton,
 } from "@clerk/nextjs";
+import { Button } from "~/components/ui/button";
 
-function SignInOutButton({ type }: { type: "signin" | "signout" }) {
+export default function Home() {
   return (
-    <button className="absolute top-4 right-4 rounded-full bg-grass-9 px-6 py-2 font-semibold no-underline transition hover:bg-grass-10">
-      {type === "signin" ? "Sign in" : "Sign out"}
-    </button>
-  );
-}
-
-export default async function Home() {
-  const { userId } = await auth();
-  if (userId) {
-    void api.todo.get.prefetch();
-  }
-
-  return (
-    <HydrateClient>
-      <EditingProvider>
-        <HelpWrapper>
-          <main className="flex flex-col items-center justify-center">
-            <SignedIn>
-              <SignOutButton>
-                <SignInOutButton type="signout" />
-              </SignOutButton>
-              <TaskProvider>
-                <TaskList />
-              </TaskProvider>
-            </SignedIn>
-            <SignedOut>
-              <SignInButton>
-                <SignInOutButton type="signin" />
-              </SignInButton>
-              <div className="mt-12 text-2xl text-olive-12">
-                Sign in to start
-              </div>
-            </SignedOut>
-          </main>
-        </HelpWrapper>
-      </EditingProvider>
-    </HydrateClient>
+    <EditingProvider>
+      <HelpWrapper>
+        <main className="flex flex-col items-center justify-center">
+          <SignedIn>
+            <SignOutButton>
+              <Button dataTestId="sign-out-button">Sign Out</Button>
+            </SignOutButton>
+            <TaskProvider>
+              <TaskList />
+            </TaskProvider>
+          </SignedIn>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <Button dataTestId="sign-in-button">Sign In</Button>
+            </SignInButton>
+            <div
+              className="text-slate-12 mt-12 text-2xl"
+              data-testid="signed-out-ui"
+            >
+              Sign in to start
+            </div>
+          </SignedOut>
+        </main>
+      </HelpWrapper>
+    </EditingProvider>
   );
 }

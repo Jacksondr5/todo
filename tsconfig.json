@@ -1,42 +1,40 @@
 {
   "compilerOptions": {
-    /* Base Options: */
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "target": "es2022",
-    "allowJs": true,
-    "resolveJsonModule": true,
-    "moduleDetection": "force",
+    "importHelpers": true,
     "isolatedModules": true,
-
-    /* Strictness */
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "checkJs": true,
-
-    /* Bundled projects */
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    "noEmit": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "preserve",
-    "plugins": [{ "name": "next" }],
+    "moduleResolution": "bundler",
+    "noEmitOnError": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "allowJs": true,
+    "esModuleInterop": true,
     "incremental": true,
-
-    /* Path Aliases */
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": [
-    ".eslintrc.cjs",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.js",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": ["node_modules"]
+  "include": ["src", "convex", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "src/**/*.spec.ts",
+    "src/**/*.test.ts",
+    "src/**/*.stories.tsx",
+    "src/**/*.mock.ts"
+  ]
 }
