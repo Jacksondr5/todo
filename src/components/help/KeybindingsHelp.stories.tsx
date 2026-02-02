@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, within, userEvent } from "storybook/test";
-import React from "react";
 import { KeybindingsHelp } from "./KeybindingsHelp";
 import { HelpWrapper } from "./HelpWrapper";
 import { EditingProvider } from "../../contexts/EditingContext";
