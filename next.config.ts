@@ -1,7 +1,7 @@
 import { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 // Importing the file to validate env during build
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 import { env } from "./src/env";
 
 const nextConfig = {
