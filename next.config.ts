@@ -1,8 +1,7 @@
 import { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 // Importing the file to validate env during build
- 
-import { env } from "./src/env";
+import "./src/env";
 
 const nextConfig = {
   // Add transpilePackages to handle packages with TypeScript source
