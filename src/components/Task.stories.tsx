@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, within, fn } from "storybook/test";
-import React from "react";
 import { TaskView, type TaskViewProps } from "./Task";
 
 const meta = {

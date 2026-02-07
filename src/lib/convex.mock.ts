@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FunctionReference, getFunctionName } from "convex/server";
 import { fn, Mock } from "storybook/test";
 import { Preloaded } from "convex/react";

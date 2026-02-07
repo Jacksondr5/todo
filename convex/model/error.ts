@@ -89,13 +89,13 @@ export const unwrapResult = <T, E>(result: Result<T, E>): T | E => {
   return result.value;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export type SerializableOK<T, E> = {
   ok: true;
   value: T;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export type SerializableError<T, E> = {
   ok: false;
   error: E;
