@@ -1,6 +1,6 @@
 "use client";
 
-import React, {
+import {
   type ReactNode,
   createContext,
   useContext,
@@ -122,8 +122,10 @@ export function TaskProvider({ children }: { children: ReactNode }) {
     (localStore, args) => {
       const tasksData = getTasksFromLocalStore(localStore);
       if (tasksData) {
+        // eslint-disable-next-line react-hooks/purity -- optimistic update callbacks are intentionally impure
         const now = Date.now();
         const newTask = {
+           
           _id: crypto.randomUUID() as Id<"tasks">,
           _creationTime: now,
           title: args.title,

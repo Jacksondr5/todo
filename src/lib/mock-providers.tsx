@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { EditingProvider } from "~/contexts/EditingContext";
 import { TaskProvider } from "~/contexts/TaskContext";
 
